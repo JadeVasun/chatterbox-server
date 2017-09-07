@@ -52,7 +52,23 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Hello, World!');
+  if (request.url !== '/classes/messages') {
+    response.writeHead(404, headers);
+    response.end();
+  }
+  
+  if (request.method === 'GET' && request.url === '/classes/messages') {
+    var obj = {
+      results: []
+    };
+  
+    response.end(JSON.stringify(obj));
+  }
+
+  if (request.method === 'POST' && request.url === '/classes/messages') {
+    //console.log(request, 'testing');
+    response.end()
+  }
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -71,3 +87,5 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
+exports.requestHandler = requestHandler;
+exports.defaultCorsHeaders = defaultCorsHeaders;
